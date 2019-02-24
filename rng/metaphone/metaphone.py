@@ -405,9 +405,10 @@ def process_Z(s, idx, last, slavogermanic):
 
 
 def process_vowel(s, idx, last, slavogermanic):
-    if idx == 0:
-        return ("A", "A", 1)
-    return ("", "", 1)
+    # if idx == 0:
+    #     return ("A", "A", 1)
+    # return ("", "", 1)
+    return ("A", "A", 1)
 
 
 process_A = process_vowel
