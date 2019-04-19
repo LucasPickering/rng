@@ -1,6 +1,10 @@
-### Markov
+### Vowel Randomization
 
-Letter-based Markov chains. Probably won't work well.
+Replace each vowel segment with a random segment of the same length
+
+### Consonant DMPH Randomization
+
+Replace each consonant segment with a random consonant segment that DMPH's to the same thing
 
 ### Synonyms
 
