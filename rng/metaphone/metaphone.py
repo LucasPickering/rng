@@ -452,3 +452,15 @@ def dmetaphone_segments(source):
             index += 1
 
     return segments
+
+
+def dmetaphone(source):
+    """
+    Gets the DMPH of a source string, as a pair of (primary, secondary)
+    """
+    segments = dmetaphone_segments(source)
+    # Iter of (prim, sec) key pairs. If sec is empty, default to prim
+    keys = ((prim, sec or prim) for (_, (prim, sec)) in segments)
+    # Unzip into two separate iters
+    prim_keys, sec_keys = zip(*keys)
+    return ("".join(prim_keys), "".join(sec_keys))

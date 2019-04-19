@@ -1,6 +1,6 @@
 from collections import Counter
 
-VOWELS = {"a", "e", "i", "o", "u"}
+VOWELS = {"A", "E", "I", "O", "U"}
 
 
 def is_vowel(char):
@@ -10,6 +10,10 @@ def is_vowel(char):
 
 def is_vowel_segment(segment):
     return is_vowel(segment[0])
+
+
+def is_consonant_segment(segment):
+    return not is_vowel_segment(segment)
 
 
 def split_segments(word):

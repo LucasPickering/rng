@@ -1,1 +1,1 @@
-from .metaphone import dmetaphone_segments
+from .metaphone import dmetaphone_segments, dmetaphone
