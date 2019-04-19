@@ -35,11 +35,34 @@ class DataContainer:
 class Randomizer:
     """
     A utility for generating randomness.
+
+    seed - The random seed
+    entropy - Variation towards unlikely values. When making a weighted choice,
+    a higher entropy (>1.0) will bias towards lower weights. A lower entropy
+    (<1.0) will bias towards the more frequent options even more.
+    If entropy=1.0, the normal weights will be used.
+    In other words, entropy>1.0 will push weights towards the average and
+    entropy<1.0 will push weights away from the average.
     """
+
+    def __init__(self, seed=None, entropy=1.0):
+        self._random = random.Random(seed)
+        self._entropy = entropy
+
+    def _apply_entropy(self, weights):
+        # Optimization for entropy=1.0 to skip this work
+        if self._entropy != 1.0:
+            avg = sum(weights) / len(weights)
+            # Divide the difference between each weight and the average by
+            # the entropy factor. If entropy>1.0, this will decrease the diff.
+            # If entropy<1.0, this will increase the diff.
+            return [((w - avg) / self._entropy) + avg for w in weights]
+        return weights
 
     def weighted_choice(self, weighted_dict):
         vals, weights = zip(*weighted_dict.items())
-        return random.choices(vals, weights, k=1)[0]
+        weights = self._apply_entropy(weights)
+        return self._random.choices(vals, weights, k=1)[0]
 
 
 class TokenBuilder:
@@ -107,15 +130,14 @@ class RNG:
         with open(dict_file) as f:
             d = json.load(f)
         self._data_container = DataContainer(d)
-        self._randomizer = Randomizer()
 
-    def generate(self, source, iterations=1):
+    def generate(self, iterations, seed, entropy, source):
+        randomizer = Randomizer(seed, entropy)
+
         # Make all caps and split on whitespace
         source_tokens = source.upper().split()
         builders = [
-            TokenBuilder(
-                self._data_container, self._randomizer, token, init=False
-            )
+            TokenBuilder(self._data_container, randomizer, token, init=False)
             for token in source_tokens
         ]
 
